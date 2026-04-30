@@ -17,7 +17,11 @@ app.use(
 );
 
 app.get("/", (req, res) => {
-  return res.oidc.login({ returnTo: "http://localhost:5173/profile" });
+  if (req.oidc.isAuthenticated()) {
+    res.redirect("http://localhost:5173/profile");
+  } else {
+    res.redirect("http://localhost:5173");
+  }
 });
 
 app.get("/profile", requiresAuth(), (req, res) => {
@@ -36,5 +40,5 @@ app.get("/profile", requiresAuth(), (req, res) => {
 //   });
 // });
 
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
